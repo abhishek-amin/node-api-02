@@ -4,7 +4,13 @@ const UserController = require('./user.controller');
 module.exports = (app) => {
 	app.use(function timeLog (req, res, next){
 		console.log('HTTP REQUEST on: ', dateFormat());
-		next()
+		next();
+	});
+
+	app.use(function(req, res, next) {
+		res.header("Access-Control-Allow-Origin", "*");
+		res.header("Access-Control-Allow-Headers", "*");
+		next();
 	});
 	
 	// routes for user

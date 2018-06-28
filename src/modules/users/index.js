@@ -8,7 +8,9 @@ module.exports = (app) => {
 	});
 	
 	// routes for user
-	app.get('/api/user', UserController.getHomePage);
+	app.get('/api/user', UserController.getAllUsers);
 	app.get('/api/user/byAge/:age', UserController.getUserByAge);
 	app.get('/api/user/byName/:name', UserController.getUserByName);
+	app.post('/api/user', UserController.postNewUser);
+	app.delete('/api/user/:id', UserController.deleteUser);
 };

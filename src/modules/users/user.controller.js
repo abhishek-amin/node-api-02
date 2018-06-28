@@ -3,7 +3,12 @@ const Users = require('./user.model');
 class UserController {
 	static async getAllUsers (req, res) {
 		try {
-			const users = await Users.find({});
+			let options = {
+				sort: { name: 1 },
+				limit: Number(req.query.limit),
+				page: Number(req.query.page)
+			}
+			const users = await Users.paginate({}, options);
 			res.json(users);
 		} catch (err) {
 			res.send(err);

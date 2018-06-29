@@ -4,14 +4,17 @@ class UserController {
 	static async getAllUsers (req, res) {
 		try {
 			let options = {
-				sort: { name: 1 },
 				limit: Number(req.query.limit),
 				page: Number(req.query.page)
 			}
-			const users = await Users.paginate({}, options);
-			res.json(users);
+			const allUsers = await Users.find({});
+			let result = {};
+			result.docs = await Users.find({}).limit(options.limit).skip(options.limit * (options.page - 1)).sort({ name: 'asc'});
+			result.total = allUsers.length;
+			res.json(result);
 		} catch (err) {
-			res.send(err);
+			console.log(err);
+			res.json(err);
 		}
 	}
 
@@ -39,7 +42,7 @@ class UserController {
 				name: req.body.name,
 				age: req.body.age
 			});
-			await user.find();
+			await user.save();
 			res.json(user);
 		} catch (err) {
 			console.log(err);

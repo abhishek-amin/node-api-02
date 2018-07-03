@@ -12,4 +12,4 @@ global.Mongoose.connect(config.getDbConnectionString());
 app.use(bodyParser.json());
 
 modules(app);
-app.listen(port);
+app.listen(port, console.log('Server now running.'));

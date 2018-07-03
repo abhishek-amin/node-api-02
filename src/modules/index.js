@@ -1,4 +1,3 @@
-module.exports = (server) => {
-	console.log('inside module index');
-	require('./users')(server);
+module.exports = (app) => {
+	require('./users')(app);
 }

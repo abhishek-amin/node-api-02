@@ -14,7 +14,8 @@ module.exports = (app) => {
 	});
 	
 	// routes for user
-	app.get('/api/users', UserController.getUsers);
-	app.post('/api/users/new', UserController.postNewUser); // create new user
-	app.delete('/api/users/:id', UserController.deleteUser); // delete user
+	app.get(		'/api/users', UserController.getUsers);
+	app.post(		'/api/users', UserController.postNewUser);		// create new user
+	app.put(		'/api/users/:id', UserController.editUser); 			// edit user 
+	app.delete(	'/api/users/:id', UserController.deleteUser); 	// delete user
 };

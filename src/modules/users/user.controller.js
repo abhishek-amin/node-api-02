@@ -49,10 +49,15 @@ class UserController {
 
 	static async postNewUser (req, res) {
 		try {
-			const user = await Users({
+			const newUser = {
 				name: req.body.name,
 				age: req.body.age
-			});
+			}
+			const user = await Users(newUser);
+
+			const err = await user.joiValidate(newUser);
+			if (err) throw err;
+
 			await user.save();
 			res.status(201).json(user);
 		} catch (err) {

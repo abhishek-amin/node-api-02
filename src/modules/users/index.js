@@ -1,5 +1,5 @@
 const dateFormat = require('dateformat');
-const UserController = require('./user.controller');
+const UsersController = require('./users.controller');
 
 module.exports = (app) => {
 	app.use(function timeLog (req, res, next){
@@ -14,8 +14,8 @@ module.exports = (app) => {
 	});
 	
 	// routes for user
-	app.get(		'/api/users', UserController.getUsers);
-	app.post(		'/api/users', UserController.postNewUser); // create new user
-	app.put(		'/api/users/:id', UserController.editUser); // edit user
-	app.delete(	'/api/users/:id', UserController.deleteUser); // delete user
+	app.get(		'/api/users', UsersController.getUsers);
+	app.post(		'/api/users', UsersController.postNewUser); // create new user
+	app.put(		'/api/users/:id', UsersController.editUser); // edit user
+	app.delete(	'/api/users/:id', UsersController.deleteUser); // delete user
 };

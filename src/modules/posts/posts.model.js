@@ -1,7 +1,8 @@
 const Schema = global.Mongoose.Schema
 
 const postSchema = new Schema({
-  user: {type: Schema.Types.ObjectId, ref: 'users'},
+  userId: {type: Schema.Types.ObjectId, ref: 'users'},
+  userName: String,
   content: String,
   timeStamp: String,
 }, {
@@ -11,7 +12,8 @@ const postSchema = new Schema({
 postSchema.methods.joiValidate = function (obj) {
   const Joi = require('joi');
   const schema = {
-    user: Joi.string().required(),
+    userId: Joi.string().required(),
+    userName: Joi.string(),
     content: Joi.string().min(1).max(160).required(),
     timeStamp: Joi.string().required()
   }

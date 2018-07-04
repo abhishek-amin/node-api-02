@@ -1,6 +1,5 @@
 const Posts = require('./posts.model');
 const Users = require('../users/users.model');
-const UsersController = require('../users/users.controller');
 const dateFormat = require('dateformat');
 
 // class for posts methods
@@ -20,25 +19,33 @@ class PostsController {
   static async makeNewPost (req, res) {
     try {
       const newPost = {
-        user: req.body.user,
+        userId: req.body.userId,
         content: req.body.content,
         timeStamp: dateFormat()
       }
-      console.log(1);
+
+      const user = await Users.findOne({_id: req.body.userId})
+      newPost.userName = user.name;
+
       const post = await Posts(newPost);
-      console.log(2);
       await post.joiValidate(newPost);
-      console.log(3);
       await post.save();
-      console.log(newPost.user);
-      console.log('#')
-      await Users.findByIdAndUpdate({_id: newPost.user}, {"$push": { posts: post} })
-      console.log(4);
+      console.log(newPost.userId);
+      await Users.findByIdAndUpdate({_id: newPost.userId}, {"$push": { posts: post}})
       res.status(201).json(post);
-      console.log(1);
     } catch (err) {
       console.log(err);
       res.status(404).json({errorMessage: "Something went wrong."});
+    }
+  }
+
+  static async deletePost (req, res) {
+    try {
+      await Posts.findByIdAndRemove({_id: req.params._id})
+      await Users.findByIdAndUpdate({_id: newPost.userId}, {"$pop": { posts: post}})
+      res.status(200).json({message: 'post removed successfully.'})
+    } catch (err) {
+      res.status(404).json(err)
     }
   }
 }

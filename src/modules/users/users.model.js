@@ -3,7 +3,8 @@ const Schema = global.Mongoose.Schema;
 const userSchema = new Schema({
 	name: String,
 	pwd: String,
-	age: Number
+	age: Number,
+	posts: [{type: Schema.Types.ObjectId, ref: 'posts'}]
 }, {
 	versionKey: false
 });

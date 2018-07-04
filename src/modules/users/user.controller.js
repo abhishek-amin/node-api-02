@@ -49,20 +49,34 @@ class UserController {
 
 	static async postNewUser (req, res) {
 		try {
+			const bcrypt = require('bcrypt');
+			const hashed = await bcrypt.hash(req.body.pwd, 10);
 			const newUser = {
 				name: req.body.name,
+				pwd: req.body.pwd,
 				age: req.body.age
 			}
 			const user = await Users(newUser);
-
-			const err = await user.joiValidate(newUser);
-			if (err) throw err;
-
+			await user.joiValidate(newUser);
+			user.pwd = hashed;
 			await user.save();
 			res.status(201).json(user);
 		} catch (err) {
 			console.log(err);
 			res.status(404).send(err);
+		}
+	}
+
+	static async editUser (req, res) {
+		try {
+			const user = await Users.findByIdAndUpdate({ _id: req.params.id }, {
+				name: req.body.name,
+				age: req.body.age
+			});
+			await user.save();
+			res.status(200).json({msg: "user updated."});
+		} catch (err) {
+			res.status(404).json({msg: "Failed to update user."});
 		}
 	}
 

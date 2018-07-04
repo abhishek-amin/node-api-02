@@ -1,6 +1,36 @@
 const Users = require('./users.model');
 
 class UsersController {
+	static async login (req, res) {
+		try {
+			console.log('inside login');
+			const bcrypt = require('bcrypt');
+			const user = await Users.findOne({name: req.body.name});
+			if (user.name === req.body.name) {
+				const match = await bcrypt.compare(req.body.pwd, user.pwd)
+				if (match) {
+					req.session.user = user
+					res.status(200).json({message: `${user.name} Logged In!`});
+				}
+			}
+		} catch (err) {
+			res.status(404).send(err);
+		}
+	}
+
+	static async logout (req, res) {
+		try {
+			const user = req.session.user;
+			console.log(`user to logout: ${user.name}`);
+			if (user) {
+				await req.session.destroy()
+				res.status(200).json({msg: `User ${user.name} Logged out!.`});
+			}
+		} catch (err) {
+			res.status(404).send(err);
+		}
+	}
+
 	static async getUsers (req, res) {
 		if (req.query.age && req.query.name) {
 			try {
@@ -37,6 +67,7 @@ class UsersController {
 				}
 				const allUsers = await Users.find({});
 				let result = {};
+				result.currentUser = req.session.user.name;
 				result.docs = await Users.find({}).limit(options.limit).skip(options.limit * (options.page - 1)).sort({ name: 'asc'});
 				result.total = allUsers.length;
 				res.status(200).json(result);

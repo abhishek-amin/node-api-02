@@ -23,7 +23,7 @@ const path = `/api/login`
 app.use((req, res, next) => {
   if(req.url === path) next();
   else if (req.session.user) next();
-  else res.status(400).json({message: "Login required."})
+  else res.status(403).json({message: "Login required."})
 })
 
 modules(app);

@@ -1,6 +1,6 @@
-const Users = require('./user.model');
+const Users = require('./users.model');
 
-class UserController {
+class UsersController {
 	static async getUsers (req, res) {
 		if (req.query.age && req.query.name) {
 			try {
@@ -90,4 +90,4 @@ class UserController {
 	}
 }
 
-module.exports = UserController;
+module.exports = UsersController;

@@ -3,7 +3,6 @@ const Users = require('./users.model');
 class UsersController {
 	static async login (req, res) {
 		try {
-			console.log('inside login');
 			const bcrypt = require('bcrypt');
 			const user = await Users.findOne({name: req.body.name});
 			if (user.name === req.body.name) {
@@ -21,7 +20,6 @@ class UsersController {
 	static async logout (req, res) {
 		try {
 			const user = req.session.user;
-			console.log(`user to logout: ${user.name}`);
 			if (user) {
 				await req.session.destroy()
 				res.status(200).json({msg: `User ${user.name} Logged out!.`});
@@ -46,7 +44,6 @@ class UsersController {
 
 		if (req.query.age) {
 			try {
-				console.log(req.query.age);
 				const user = await Users.find({ age: req.query.age});
 				res.status(200).send(user);
 			} catch (err) {
@@ -72,8 +69,7 @@ class UsersController {
 				result.total = allUsers.length;
 				res.status(200).json(result);
 			} catch (err) {
-				console.log(err);
-				res.status(404).json(err);
+				res.status(404).send(err);
 			}
 		}
 	}
@@ -93,7 +89,6 @@ class UsersController {
 			await user.save();
 			res.status(201).json(user);
 		} catch (err) {
-			console.log(err);
 			res.status(404).send(err);
 		}
 	}

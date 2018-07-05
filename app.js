@@ -2,9 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+global.Mongoose = require('mongoose');
+const dateFormat = require('dateformat');
 const config = require('./config');
 const modules = require('./src/modules');
-global.Mongoose = require('mongoose');
 
 const port = 5000;
 const app = express();
@@ -19,6 +20,17 @@ app.use(session({
   saveUninitialized: true
 }))
 
+app.use(function timeLog (req, res, next){
+  console.log(`${dateFormat()} : ${req.method} ${req.url}`);
+  next();
+});
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  next();
+});
+
 app.use((req, res, next) => {
   if(req.url === `/api/login`) next();
   else if (req.session.user) next();
@@ -26,4 +38,4 @@ app.use((req, res, next) => {
 })
 
 modules(app);
-app.listen(port);
+app.listen(port, console.log(`App is now running.`));

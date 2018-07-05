@@ -32,7 +32,7 @@ app.use(function(req, res, next) {
 });
 
 app.use((req, res, next) => {
-  if(req.url === `/api/login`) next();
+  if(req.url === `/api/login` || req.url === `/api/signup`) next();
   else if (req.session.user) next();
   else res.status(403).json({message: "Login required."})
 })

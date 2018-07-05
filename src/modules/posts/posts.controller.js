@@ -18,30 +18,30 @@ class PostsController {
   static async makeNewPost (req, res) {
     try {
       const newPost = {
-        userId: req.body.userId,
+        username: req.session.user.username,
         content: req.body.content,
         timeStamp: dateFormat()
       }
 
-      const user = await Users.findOne({_id: req.body.userId})
-      newPost.userName = user.name;
+      // const user = await Users.findOne({username: req.session.username})
 
       const post = await Posts(newPost);
       await post.joiValidate(newPost);
       await post.save();
-      await Users.findByIdAndUpdate({_id: newPost.userId}, {"$push": { posts: post}})
+      await Users.findOneAndUpdate({username: req.session.user.username}, {"$push": { posts: post}})
       res.status(201).json(post);
     } catch (err) {
-      res.status(404).json({errorMessage: "Something went wrong."});
+      res.status(404).send(err);
     }
   }
 
   static async deletePost (req, res) {
     try {
       const post = await Posts.findByIdAndRemove(req.params.id)
-      await Users.findByIdAndUpdate(post.userId, {"$pull": {posts: post._id}})
+      await Users.findOneAndUpdate({username: post.username}, {"$pull": {posts: post._id}})
       res.status(200).json({message: 'post removed successfully.'})
     } catch (err) {
+      console.log(err)
       res.status(404).send(err)
     }
   }

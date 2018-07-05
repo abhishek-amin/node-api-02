@@ -2,7 +2,6 @@ const Posts = require('./posts.model');
 const Users = require('../users/users.model');
 const dateFormat = require('dateformat');
 
-// class for posts methods
 class PostsController {
   static async getPosts (req, res) {
     try {

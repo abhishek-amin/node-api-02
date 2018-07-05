@@ -1,6 +1,7 @@
 const Posts = require('./posts.model');
 const Users = require('../users/users.model');
 const dateFormat = require('dateformat');
+const session = require('express-session');
 
 // class for posts methods
 class PostsController {
@@ -29,8 +30,8 @@ class PostsController {
 
       const post = await Posts(newPost);
       await post.joiValidate(newPost);
+      console.log(post);
       await post.save();
-      console.log(newPost.userId);
       await Users.findByIdAndUpdate({_id: newPost.userId}, {"$push": { posts: post}})
       res.status(201).json(post);
     } catch (err) {
@@ -41,11 +42,16 @@ class PostsController {
 
   static async deletePost (req, res) {
     try {
-      await Posts.findByIdAndRemove({_id: req.params._id})
-      await Users.findByIdAndUpdate({_id: newPost.userId}, {"$pop": { posts: post}})
+      const post = await Posts.findByIdAndRemove(req.params.id)
+      console.log(`User Id: ${post.userId}`)
+      console.log(`Post Id: ${post._id}`)
+      // const user = Users.findById(post.userId);
+      // console.log(user);
+      await Users.findByIdAndUpdate(post.userId, {"$pull": {posts: post._id}})
       res.status(200).json({message: 'post removed successfully.'})
     } catch (err) {
-      res.status(404).json(err)
+      console.log(err)
+      res.status(404).send(err)
     }
   }
 }

@@ -6,7 +6,7 @@ module.exports = (app) => {
 		res.header("Access-Control-Allow-Headers", "*");
 		next();
 	});
-	
+
 	// routes for Post
 	app.get(		'/api/posts', PostsController.getPosts);
 	app.post(		'/api/posts', PostsController.makeNewPost); // create new Post

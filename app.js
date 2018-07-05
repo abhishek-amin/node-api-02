@@ -19,9 +19,8 @@ app.use(session({
   saveUninitialized: true
 }))
 
-const path = `/api/login`
 app.use((req, res, next) => {
-  if(req.url === path) next();
+  if(req.url === `/api/login`) next();
   else if (req.session.user) next();
   else res.status(403).json({message: "Login required."})
 })
